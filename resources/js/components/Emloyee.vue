@@ -7,7 +7,7 @@
                 <h3 class="card-title">Danh sách nhân viên</h3>
 
                 <div class="card-tools">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#addNew">
+                    <button class="btn btn-primary" @click="resetModal">
                         Thêm mới  <i class="fas fa-user-plus"></i>
                         </button>
                 </div>
@@ -35,7 +35,7 @@
                       <td>{{ user.salary }} VNĐ</td> 
                       <td>{{ user.created_at | myDate }}</td> 
                       <td>
-                          <a href="#" @click="editEmloyee(user.id)">
+                          <a href="#" @click="fillModal(user)">
                             <i class="fa fa-edit teal"></i>
                           </a>
                           /
@@ -54,12 +54,13 @@
           </div>
         </div>
         <!-- Modal -->
-        <form @submit.prevent="addUser">
+        <form @submit.prevent="modeOfEmloyeeFunc ? updateEmloyee() : addEmloyee()">
         <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addNewLabel">Thêm nhân viên mới</h5>
+                    <h5 class="modal-title" v-show="modeOfEmloyeeFunc" id="addNewLabel">Cập nhật nhân viên</h5>
+                    <h5 class="modal-title" v-show="!modeOfEmloyeeFunc" id="addNewLabel">Thêm nhân viên mới</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -106,7 +107,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger" data-dismiss="modal">Trở lại</button>
-                    <button type="submit" class="btn btn-primary">Tạo mới</button>
+                    <button v-show="modeOfEmloyeeFunc" type="submit" class="btn btn-primary">Cập nhật</button>
+                    <button v-show="!modeOfEmloyeeFunc" type="submit" class="btn btn-primary">Tạo mới</button>
                 </div>
                 </div>
             </div>
@@ -120,8 +122,10 @@ import Form from 'vform'
     export default {
       data(){
         return {
+          modeOfEmloyeeFunc: false,
           users: {},
           form: new Form({
+          id: '',
           name: '',
           role: 'emloyee',
           salary: '',
@@ -131,12 +135,12 @@ import Form from 'vform'
         }
       },
       methods: {
-        getUsers(){
+        getEmloyee(){
           axios.get('api/user')
           .then(
             ( {data} ) => (this.users = data.data));
         },
-        addUser(){
+        addEmloyee(){
           this.form.post('api/user')
           .then( () => {
             Fire.$emit('sendRequest')
@@ -176,39 +180,42 @@ import Form from 'vform'
             })
             }
           })
-          
-        //   Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "You won't be able to revert this!",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Yes, delete it!'
-        //   }).then((result) => {
+        },
+        updateEmloyee(){
+          this.form.put('api/user/'+this.form.id)
+                .then(() => {
+                    // success
+                    $('#addNew').modal('hide');
+                     Swal.fire(
+                        'Đã cập nhật!',
+                        'Cập nhật thông tin thành công.',
+                        'success'
+                        )
+                        Fire.$emit('sendRequest');
+                })
+                .catch(() => {
+                    
+                });
+        },
+        resetModal(){
+          // this.modeOfEmloyeeFunc = !this.modeOfEmloyeeFunc;
+          this.modeOfEmloyeeFunc = false;
 
-        //     this.form.delete('api/user/' + id)
-        //     .then( () => {
-        //     if (result.isConfirmed) {
-        //       Swal.fire(
-        //         'Deleted!',
-        //         'Your file has been deleted.',
-        //         'success'
-        //       )
-        //     }
-        //     })
-        //     .catch( () => {
-        //       })
-        //   })
-        // },
-        // editEmloyee(id){
+          this.form.reset();
+            $('#addNew').modal('show');
 
+        },
+        fillModal(user){
+          this.modeOfEmloyeeFunc = true;
+          this.form.reset();
+          $('#addNew').modal('show');
+          this.form.fill(user);
         }
       },
         created(){
-          this.getUsers();
+          this.getEmloyee();
           Fire.$on('sendRequest',() =>{
-            this.getUsers();
+            this.getEmloyee();
           }); 
         },
     }

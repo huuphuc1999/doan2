@@ -2043,12 +2043,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      modeOfEmloyeeFunc: false,
       users: {},
       form: new vform__WEBPACK_IMPORTED_MODULE_0__["default"]({
+        id: '',
         name: '',
         role: 'emloyee',
         salary: '',
@@ -2058,7 +2062,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    getUsers: function getUsers() {
+    getEmloyee: function getEmloyee() {
       var _this = this;
 
       axios.get('api/user').then(function (_ref) {
@@ -2066,7 +2070,7 @@ __webpack_require__.r(__webpack_exports__);
         return _this.users = data.data;
       });
     },
-    addUser: function addUser() {
+    addEmloyee: function addEmloyee() {
       this.form.post('api/user').then(function () {
         Fire.$emit('sendRequest');
         $('#addNew').modal('hide');
@@ -2096,38 +2100,35 @@ __webpack_require__.r(__webpack_exports__);
             Swal.fire("Thất bại", "Đã có lỗi xảy ra!", "warning");
           });
         }
-      }); //   Swal.fire({
-      //     title: 'Are you sure?',
-      //     text: "You won't be able to revert this!",
-      //     icon: 'warning',
-      //     showCancelButton: true,
-      //     confirmButtonColor: '#3085d6',
-      //     cancelButtonColor: '#d33',
-      //     confirmButtonText: 'Yes, delete it!'
-      //   }).then((result) => {
-      //     this.form.delete('api/user/' + id)
-      //     .then( () => {
-      //     if (result.isConfirmed) {
-      //       Swal.fire(
-      //         'Deleted!',
-      //         'Your file has been deleted.',
-      //         'success'
-      //       )
-      //     }
-      //     })
-      //     .catch( () => {
-      //       })
-      //   })
-      // },
-      // editEmloyee(id){
+      });
+    },
+    updateEmloyee: function updateEmloyee() {
+      this.form.put('api/user/' + this.form.id).then(function () {
+        // success
+        $('#addNew').modal('hide');
+        Swal.fire('Đã cập nhật!', 'Cập nhật thông tin thành công.', 'success');
+        Fire.$emit('sendRequest');
+      })["catch"](function () {});
+    },
+    resetModal: function resetModal() {
+      // this.modeOfEmloyeeFunc = !this.modeOfEmloyeeFunc;
+      this.modeOfEmloyeeFunc = false;
+      this.form.reset();
+      $('#addNew').modal('show');
+    },
+    fillModal: function fillModal(user) {
+      this.modeOfEmloyeeFunc = true;
+      this.form.reset();
+      $('#addNew').modal('show');
+      this.form.fill(user);
     }
   },
   created: function created() {
     var _this3 = this;
 
-    this.getUsers();
+    this.getEmloyee();
     Fire.$on('sendRequest', function () {
-      _this3.getUsers();
+      _this3.getEmloyee();
     });
   }
 });
@@ -62618,11 +62619,29 @@ var render = function() {
     _c("div", { staticClass: "row mt-5" }, [
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "card-header" }, [
+            _c("h3", { staticClass: "card-title" }, [
+              _vm._v("Danh sách nhân viên")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-tools" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  on: { click: _vm.resetModal }
+                },
+                [
+                  _vm._v("\n                    Thêm mới  "),
+                  _c("i", { staticClass: "fas fa-user-plus" })
+                ]
+              )
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body table-responsive p-0" }, [
             _c("table", { staticClass: "table table-hover text-nowrap" }, [
-              _vm._m(1),
+              _vm._m(0),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -62649,7 +62668,7 @@ var render = function() {
                           attrs: { href: "#" },
                           on: {
                             click: function($event) {
-                              return _vm.editEmloyee(user.id)
+                              return _vm.fillModal(user)
                             }
                           }
                         },
@@ -62687,7 +62706,7 @@ var render = function() {
         on: {
           submit: function($event) {
             $event.preventDefault()
-            return _vm.addUser.apply(null, arguments)
+            _vm.modeOfEmloyeeFunc ? _vm.updateEmloyee() : _vm.addEmloyee()
           }
         }
       },
@@ -62713,7 +62732,43 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(2),
+                  _c("div", { staticClass: "modal-header" }, [
+                    _c(
+                      "h5",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.modeOfEmloyeeFunc,
+                            expression: "modeOfEmloyeeFunc"
+                          }
+                        ],
+                        staticClass: "modal-title",
+                        attrs: { id: "addNewLabel" }
+                      },
+                      [_vm._v("Cập nhật nhân viên")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "h5",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.modeOfEmloyeeFunc,
+                            expression: "!modeOfEmloyeeFunc"
+                          }
+                        ],
+                        staticClass: "modal-title",
+                        attrs: { id: "addNewLabel" }
+                      },
+                      [_vm._v("Thêm nhân viên mới")]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(1)
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
                     _c("div", { staticClass: "form-group" }, [
@@ -62930,7 +62985,50 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(3)
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "submit", "data-dismiss": "modal" }
+                      },
+                      [_vm._v("Trở lại")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.modeOfEmloyeeFunc,
+                            expression: "modeOfEmloyeeFunc"
+                          }
+                        ],
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Cập nhật")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.modeOfEmloyeeFunc,
+                            expression: "!modeOfEmloyeeFunc"
+                          }
+                        ],
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Tạo mới")]
+                    )
+                  ])
                 ])
               ]
             )
@@ -62941,28 +63039,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Danh sách nhân viên")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-tools" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary",
-            attrs: { "data-toggle": "modal", "data-target": "#addNew" }
-          },
-          [
-            _vm._v("\n                    Thêm mới  "),
-            _c("i", { staticClass: "fas fa-user-plus" })
-          ]
-        )
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -62989,45 +63065,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title", attrs: { id: "addNewLabel" } }, [
-        _vm._v("Thêm nhân viên mới")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-danger",
-          attrs: { type: "submit", "data-dismiss": "modal" }
-        },
-        [_vm._v("Trở lại")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-        [_vm._v("Tạo mới")]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true
