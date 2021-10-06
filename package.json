@@ -10,7 +10,8 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.19",
+        "@babel/preset-env": "^7.15.6",
+        "axios": "^0.19.2",
         "bootstrap": "^4.0.0",
         "cross-env": "^7.0",
         "jquery": "^3.2",
@@ -25,7 +26,28 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.4",
+        "@vue/babel-plugin-transform-vue-jsx": "^1.2.1",
         "admin-lte": "^3.1.0",
+        "core-js": "^3.18.1",
+        "moment": "^2.29.1",
+        "sweetalert2": "^11.1.7",
+        "vform": "^2.1.1",
         "vue-router": "^3.5.2"
-    }
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions"
+    ],
+    "babel": {
+        "presets": [
+          [
+            "@babel/preset-env",
+            {
+              "targets": {
+                "esmodules": true
+              }
+            }
+          ]
+        ]
+      }
 }

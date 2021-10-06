@@ -7,7 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-
+import moment from 'moment';
 import Vue from 'vue';
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
@@ -22,6 +22,33 @@ const router = new VueRouter({
     mode: 'history',
     routes // short for `routes: routes`
   })  
+////////////////////
+// Filter
+Vue.filter('upText', function(text){
+    return text.charAt(0).toUpperCase() + text.slice(1)
+});
+
+Vue.filter('myDate',function(created){
+    // return moment(created).format('MMMM Do YYYY');
+    return moment(created).format('MMMM Do YYYY, h:mm:ss a');
+});
+import Swal from 'sweetalert2'
+window.Swal = Swal;
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
+window.Toast = Toast;
+//
+window.Fire = new Vue();
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
