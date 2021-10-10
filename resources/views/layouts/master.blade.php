@@ -79,6 +79,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
               </li> 
 
+          @can('isAdmin')
+
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="fas fa-tools indigo"></i>
@@ -102,6 +104,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>
+          @endcan
+
+          @can('isAdmin')
           <li class="nav-item">
             <router-link to="profile" class="nav-link">
               <i class="fas fa-user-cog blue green"></i>
@@ -110,6 +115,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </router-link>
           </li> 
+          @endcan
+
           <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"
               onclick="event.preventDefault();
@@ -147,18 +154,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
   <!-- /.content-wrapper -->
 
-  <!-- Main Footer -->
+  <!-- Main Footer -->  
   <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-      Anything you want
+      Đồ án 2 - Thầy Trí
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; DH18TIN02 <a href="https://facebook.com/rhythmformylife">Phan Hữu Phúc</a>.</strong> All rights reserved.
   </footer>
 </div>
 <!-- ./wrapper -->
-
+@auth
+<script>
+    window.user = @json(auth()->user())
+</script>
+@endauth
 <!-- REQUIRED SCRIPTS -->
 
 <script src="/js/app.js"></script>

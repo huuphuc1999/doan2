@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\CreateEmloyeeRequest;
 class EmloyeeController extends Controller
 {
+        /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +25,9 @@ class EmloyeeController extends Controller
      */
     public function index()
     {
-        return User::latest()->paginate(5);
+        if (\Gate::allows('isAdmin') || \Gate::allows('isManager')) {
+            return User::latest()->paginate(5);
+        }
     }
 
     /**
@@ -27,8 +38,6 @@ class EmloyeeController extends Controller
      */
     public function store(CreateEmloyeeRequest $request)
     {
-       
-       
         //
         return User::create([
             'name' => $request['name'],
@@ -66,7 +75,13 @@ class EmloyeeController extends Controller
             'password' => 'required|string|min:6|max:191',
             'salary' => 'required|numeric|min:1|max:100000000',
         ]);
-        $user->update($request->all());
+        $user->update([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'role' => $request['role'],
+            'salary' => $request['salary'],
+            'password' => Hash::make($request['password']),
+        ]);
         return ['message' => 'Cập nhật thành công'];
     }
 
@@ -78,6 +93,7 @@ class EmloyeeController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin');
         $user = User::findOrFail($id);
         $user->delete($id);
         return ['message' => 'Xoá thành công'];

@@ -10,12 +10,15 @@ window.Vue = require('vue');
 import moment from 'moment';
 import Vue from 'vue';
 import VueRouter from 'vue-router'
+import ACL from './ACL'
+Vue.prototype.$acl = new ACL(window.user)
 Vue.use(VueRouter)
 
 const routes = [
     { path: '/home', component: require('./components/Home.vue').default },
     { path: '/emloyee', component: require('./components/Emloyee.vue').default },
-    { path: '/profile', component: require('./components/Profile.vue').default }
+    { path: '/profile', component: require('./components/Profile.vue').default },
+    { path: '*', component: require('./components/404Page.vue').default }
   ]
 
 const router = new VueRouter({
@@ -60,8 +63,11 @@ window.Fire = new Vue();
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('pagination', require('laravel-vue-pagination'));
+
+// Vue.component('404-page', require('./components/404Page.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

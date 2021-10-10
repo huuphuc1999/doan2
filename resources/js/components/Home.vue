@@ -1,23 +1,14 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Home</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+        <page-404></page-404>
 </template>
 
 <script>
+import Page404 from './404Page'
+
     export default {
-        mounted() {
-            console.log('Component mounted.')
+        components: {
+            Page404
         }
     }
 </script>
