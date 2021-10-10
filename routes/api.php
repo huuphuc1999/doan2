@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::apiResources(['user' => 'API\EmloyeeController']);
+Route::get('/searchEmloyee', 'API\EmloyeeController@search');

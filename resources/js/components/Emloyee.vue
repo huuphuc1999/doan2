@@ -299,6 +299,16 @@ export default {
     },
   },
   created() {
+    Fire.$on('startSearch',() => {
+      let query = this.$parent.search;
+      axios.get('api/searchEmloyee?q=' + query)
+      .then((data) => {
+        this.users = data.data;
+      })
+      .catch(() => {
+
+      })
+    })
     this.getEmloyee();
     Fire.$on("sendRequest", () => {
       this.getEmloyee();

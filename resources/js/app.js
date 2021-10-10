@@ -36,6 +36,7 @@ Vue.filter('myDate',function(created){
     return moment(created).format('MMMM Do YYYY, h:mm:ss a');
 });
 import Swal from 'sweetalert2'
+import { _ } from 'core-js';
 window.Swal = Swal;
 const Toast = Swal.mixin({
   toast: true,
@@ -76,5 +77,13 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    data:{
+      search: ''
+    },
+    methods:{
+      searchEmloyee: _.debounce( ()=>{
+        Fire.$emit('startSearch');
+      },1000)
+    }
 });

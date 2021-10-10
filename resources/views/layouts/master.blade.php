@@ -28,9 +28,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- SEARCH FORM -->
       <div class="input-group input-group-sm">
-        <input class="input-group-text border-0"  v-model="search" type="search" placeholder="Search" aria-label="Search">
+        <input class="form-control form-control" @keyup="searchEmloyee" v-model="search" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append">
-          <button class="btn btn-navbar" >
+          <button class="btn btn-navbar" @click="searchEmloyee">
             <i class="fa fa-search"></i>
           </button>
         </div>
