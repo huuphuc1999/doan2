@@ -20,8 +20,10 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
-# Usage
+# Usage (Cách dùng repo này)
 ```
+> git clone https://github.com/huuphuc1999/doan2.git
+> cd doan2
 > $ npm install
 > $ npm run watch
 > $ copy or rename .env.example to .env
