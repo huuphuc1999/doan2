@@ -20,6 +20,16 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# Usage
+$ npm install
+$ npm run watch
+$ copy or rename .env.example to .env
+$ config your database in .env file
+$ php artisan config:clear & php artisan config:cache
+$ php artisan migrate
+$ php artisan db:seed 
+$ php artisan serve
+visit localhost:8000/login email/pass admin@gmail.com/123123a1
 
 ## Learning Laravel
 
