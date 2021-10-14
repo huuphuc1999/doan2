@@ -11,7 +11,11 @@ export default class ACL{
     }
 
     isAccountant(){
-        return this.user.role === 'accountant';
+        if(this.user.role === 'admin' 
+        || this.user.role === 'manager' 
+        || this.user.role === 'accountant'){
+            return true;
+        }
     }
     isAdminOrManager(){
         if(this.user.role === 'admin' || this.user.role === 'manager'){

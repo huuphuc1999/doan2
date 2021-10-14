@@ -124,23 +124,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Inactive Page</p>
+                  <p>Tính lương</p>
                 </a>
               </li>
             </ul>
           </li>
           @endcan
 
-          @can('isAdmin')
           <li class="nav-item">
-            <router-link to="profile" class="nav-link">
+            <router-link to="payroll" class="nav-link">
               <i class="fas fa-user-cog blue green"></i>
               <p>
-                Profile
+                Tính lương
               </p>
             </router-link>
           </li> 
-          @endcan
           <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"
               onclick="event.preventDefault();
@@ -170,7 +168,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        <router-view></router-view>
+        
+        <keep-alive>
+          <router-view>
+
+          </router-view>
+        </keep-alive>
+        
         <!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>

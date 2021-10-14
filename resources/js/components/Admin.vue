@@ -10,10 +10,11 @@
               <button class="btn btn-primary" @click="resetModal">
                 Thêm mới <i class="fas fa-user-plus"></i>
               </button>
+              <button class="btn btn-success" @click="print">Print </button>
             </div>
           </div>
           <!-- /.card-header -->
-          <div class="card-body table-responsive p-0">
+          <div id="printMe" class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap">
               <thead>
                 <tr>
@@ -21,7 +22,7 @@
                   <th>Tên</th>
                   <th>Email</th>
                   <th>Chức vụ</th>
-                  <th>Ngày vào làm</th>
+                  <th>Quyền</th>
                   <th>Chỉnh sửa</th>
                 </tr>
               </thead>
@@ -31,13 +32,16 @@
                   <td>{{ user.name }}</td>
                   <td>{{ user.email }}</td>
                   <td>{{ user.role | upText }}</td>
-                  <td>{{ user.created_at | myDate }}</td>
+                  <td v-if="user.role ==  roles.admin">Tất cả chức năng</td>
+                  <td v-else-if="user.role ==  roles.manager">Quản lý nhân viên, tính lương, In danh sách</td>
+                  <td v-else-if="user.role ==  roles.accountant">Tính lương, In danh sách</td>
+                  <!-- <td>{{ user.created_at | myDate }}</td> -->
                   <td>
                     <a href="#" @click="fillModal(user)">
                       <i class="fa fa-edit teal"></i>
                     </a>
                     /
-                    <a href="#" @click="deleteEmloyee(user.id)">
+                    <a href="#" @click="deleteAdmin(user.id)">
                       <i class="fa fa-trash red"></i>
                     </a>
                   </td>
@@ -137,7 +141,9 @@
                   class="form-control"
                   :class="{ 'is-invalid': form.errors.has('role') }"
                 >
-                  <option v-for="user in users.data" :key="user.id" :value="user.role" >{{ user.role | upText }}</option>
+                    <option :value="roles.admin">Admin</option>
+                    <option :value="roles.manager">Quản lý</option>
+                    <option :value="roles.accountant">Kế toán</option>
                 </select>
                 <div
                   v-if="form.errors.has('role')"
@@ -146,7 +152,7 @@
               </div>
 
               <div class="form-group">
-                <p v-if="modeOfAdminFunc">Mặc định bỏ trống là không đổi </p>
+                
                 <input
                   v-model="form.password"
                   type="password"
@@ -154,7 +160,7 @@
                   placeholder="Mật khẩu..."
                   class="form-control"
                   :class="{ 'is-invalid': form.errors.has('password') }"
-                />
+                /><p v-if="modeOfAdminFunc">Mặc định bỏ trống là không đổi </p>
                 <div
                   v-if="form.errors.has('password')"
                   v-html="form.errors.get('password')"
@@ -194,6 +200,11 @@ import Page404 from "./404Page";
 export default {
   data() {
     return {
+      roles: {
+        admin: "admin",
+        manager: "manager",
+        accountant:"accountant"
+      },
       modeOfAdminFunc: false,
       users: {},
       form: new Form({
@@ -209,7 +220,11 @@ export default {
     Page404,
   },
   methods: {
-    getEmloyee() {
+    print () {
+      // Pass the element id here
+      this.$htmlToPaper('printMe');
+    },
+    getAdmin() {
       if (this.$acl.isAdminOrManager()) {
         axios.get("api/admin").then(({ data }) => (this.users = data));
       }
@@ -220,11 +235,11 @@ export default {
         $("#addNew").modal("hide");
         Toast.fire({
           icon: "success",
-          title: "Thêm nhân viên thành công!",
+          title: "Thêm admin thành công!",
         })
       });
     },
-    deleteEmloyee(id) {
+    deleteAdmin(id) {
       Swal.fire({
         title: "Chắc chắn xoá?",
         text: "Bạn sẽ không thể khôi phục!",
@@ -239,7 +254,7 @@ export default {
             .delete("api/admin/" + id)
             .then(() => {
               Fire.$emit("sendRequest");
-              Swal.fire("Đã xoá!", "Nhân viên này đã bị xoá.", "success");
+              Swal.fire("Đã xoá!", "Admin này đã bị xoá.", "success");
             })
             .catch(() => {
               Swal.fire("Thất bại", "Đã có lỗi xảy ra!", "warning");
@@ -292,9 +307,9 @@ export default {
 
       })
     })
-    this.getEmloyee();
+    this.getAdmin();
     Fire.$on("sendRequest", () => {
-      this.getEmloyee();
+      this.getAdmin();
     });
   },
 };

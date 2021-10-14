@@ -2156,11 +2156,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      roles: {
+        admin: "admin",
+        manager: "manager",
+        accountant: "accountant"
+      },
       modeOfAdminFunc: false,
       users: {},
       form: new vform__WEBPACK_IMPORTED_MODULE_0__["default"]({
@@ -2176,7 +2187,11 @@ __webpack_require__.r(__webpack_exports__);
     Page404: _404Page__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   methods: {
-    getEmloyee: function getEmloyee() {
+    print: function print() {
+      // Pass the element id here
+      this.$htmlToPaper('printMe');
+    },
+    getAdmin: function getAdmin() {
       var _this = this;
 
       if (this.$acl.isAdminOrManager()) {
@@ -2192,11 +2207,11 @@ __webpack_require__.r(__webpack_exports__);
         $("#addNew").modal("hide");
         Toast.fire({
           icon: "success",
-          title: "Thêm nhân viên thành công!"
+          title: "Thêm admin thành công!"
         });
       });
     },
-    deleteEmloyee: function deleteEmloyee(id) {
+    deleteAdmin: function deleteAdmin(id) {
       var _this2 = this;
 
       Swal.fire({
@@ -2211,7 +2226,7 @@ __webpack_require__.r(__webpack_exports__);
         if (result.isConfirmed) {
           _this2.form["delete"]("api/admin/" + id).then(function () {
             Fire.$emit("sendRequest");
-            Swal.fire("Đã xoá!", "Nhân viên này đã bị xoá.", "success");
+            Swal.fire("Đã xoá!", "Admin này đã bị xoá.", "success");
           })["catch"](function () {
             Swal.fire("Thất bại", "Đã có lỗi xảy ra!", "warning");
           });
@@ -2256,9 +2271,9 @@ __webpack_require__.r(__webpack_exports__);
         _this4.users = data.data;
       })["catch"](function () {});
     });
-    this.getEmloyee();
+    this.getAdmin();
     Fire.$on("sendRequest", function () {
-      _this4.getEmloyee();
+      _this4.getAdmin();
     });
   }
 });
@@ -2617,6 +2632,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     Page404: _404Page__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Payroll.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Payroll.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    console.log('Component mounted.');
   }
 });
 
@@ -86401,63 +86440,95 @@ var render = function() {
                       _vm._v("\n              Thêm mới "),
                       _c("i", { staticClass: "fas fa-user-plus" })
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      on: { click: _vm.print }
+                    },
+                    [_vm._v("Print ")]
                   )
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "card-body table-responsive p-0" }, [
-                _c("table", { staticClass: "table table-hover text-nowrap" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "card-body table-responsive p-0",
+                  attrs: { id: "printMe" }
+                },
+                [
                   _c(
-                    "tbody",
-                    _vm._l(_vm.users.data, function(user, index) {
-                      return _c("tr", { key: user.id }, [
-                        _c("td", [_vm._v(_vm._s(index + 1))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(user.name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(user.email))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(_vm._f("upText")(user.role)))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(_vm._f("myDate")(user.created_at)))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "a",
-                            {
-                              attrs: { href: "#" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.fillModal(user)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-edit teal" })]
-                          ),
-                          _vm._v("\n                  /\n                  "),
-                          _c(
-                            "a",
-                            {
-                              attrs: { href: "#" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.deleteEmloyee(user.id)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-trash red" })]
-                          )
-                        ])
-                      ])
-                    }),
-                    0
+                    "table",
+                    { staticClass: "table table-hover text-nowrap" },
+                    [
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.users.data, function(user, index) {
+                          return _c("tr", { key: user.id }, [
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(user.name))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(user.email))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm._f("upText")(user.role)))
+                            ]),
+                            _vm._v(" "),
+                            user.role == _vm.roles.admin
+                              ? _c("td", [_vm._v("Tất cả chức năng")])
+                              : user.role == _vm.roles.manager
+                              ? _c("td", [
+                                  _vm._v(
+                                    "Quản lý nhân viên, tính lương, In danh sách"
+                                  )
+                                ])
+                              : user.role == _vm.roles.accountant
+                              ? _c("td", [_vm._v("Tính lương, In danh sách")])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "a",
+                                {
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.fillModal(user)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-edit teal" })]
+                              ),
+                              _vm._v(
+                                "\n                  /\n                  "
+                              ),
+                              _c(
+                                "a",
+                                {
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteAdmin(user.id)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-trash red" })]
+                              )
+                            ])
+                          ])
+                        }),
+                        0
+                      )
+                    ]
                   )
-                ])
-              ]),
+                ]
+              ),
               _vm._v(" "),
               _c(
                 "div",
@@ -86665,14 +86736,25 @@ var render = function() {
                             }
                           }
                         },
-                        _vm._l(_vm.users.data, function(user) {
-                          return _c(
+                        [
+                          _c(
                             "option",
-                            { key: user.id, domProps: { value: user.role } },
-                            [_vm._v(_vm._s(_vm._f("upText")(user.role)))]
+                            { domProps: { value: _vm.roles.admin } },
+                            [_vm._v("Admin")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "option",
+                            { domProps: { value: _vm.roles.manager } },
+                            [_vm._v("Quản lý")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "option",
+                            { domProps: { value: _vm.roles.accountant } },
+                            [_vm._v("Kế toán")]
                           )
-                        }),
-                        0
+                        ]
                       ),
                       _vm._v(" "),
                       _vm.form.errors.has("role")
@@ -86685,10 +86767,6 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
-                      _vm.modeOfAdminFunc
-                        ? _c("p", [_vm._v("Mặc định bỏ trống là không đổi ")])
-                        : _vm._e(),
-                      _vm._v(" "),
                       _c("input", {
                         directives: [
                           {
@@ -86717,6 +86795,9 @@ var render = function() {
                           }
                         }
                       }),
+                      _vm.modeOfAdminFunc
+                        ? _c("p", [_vm._v("Mặc định bỏ trống là không đổi ")])
+                        : _vm._e(),
                       _vm._v(" "),
                       _vm.form.errors.has("password")
                         ? _c("div", {
@@ -86796,7 +86877,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Chức vụ")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Ngày vào làm")]),
+        _c("th", [_vm._v("Quyền")]),
         _vm._v(" "),
         _c("th", [_vm._v("Chỉnh sửa")])
       ])
@@ -87317,6 +87398,39 @@ var render = function() {
   return _c("page-404")
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Payroll.vue?vue&type=template&id=df92a7ec&":
+/*!**********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Payroll.vue?vue&type=template&id=df92a7ec& ***!
+  \**********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row justify-content-center" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -102836,7 +102950,9 @@ var ACL = /*#__PURE__*/function () {
   }, {
     key: "isAccountant",
     value: function isAccountant() {
-      return this.user.role === 'accountant';
+      if (this.user.role === 'admin' || this.user.role === 'manager' || this.user.role === 'accountant') {
+        return true;
+      }
     }
   }, {
     key: "isAdminOrManager",
@@ -102905,6 +103021,9 @@ var routes = [{
 }, {
   path: '/profile',
   component: __webpack_require__(/*! ./components/Profile.vue */ "./resources/js/components/Profile.vue")["default"]
+}, {
+  path: '/payroll',
+  component: __webpack_require__(/*! ./components/Payroll.vue */ "./resources/js/components/Payroll.vue")["default"]
 }, {
   path: '*',
   component: __webpack_require__(/*! ./components/404Page.vue */ "./resources/js/components/404Page.vue")["default"]
@@ -103397,6 +103516,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Payroll.vue":
+/*!*********************************************!*\
+  !*** ./resources/js/components/Payroll.vue ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Payroll_vue_vue_type_template_id_df92a7ec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Payroll.vue?vue&type=template&id=df92a7ec& */ "./resources/js/components/Payroll.vue?vue&type=template&id=df92a7ec&");
+/* harmony import */ var _Payroll_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Payroll.vue?vue&type=script&lang=js& */ "./resources/js/components/Payroll.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Payroll_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Payroll_vue_vue_type_template_id_df92a7ec___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Payroll_vue_vue_type_template_id_df92a7ec___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Payroll.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Payroll.vue?vue&type=script&lang=js&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/Payroll.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Payroll_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Payroll.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Payroll.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Payroll_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Payroll.vue?vue&type=template&id=df92a7ec&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/Payroll.vue?vue&type=template&id=df92a7ec& ***!
+  \****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Payroll_vue_vue_type_template_id_df92a7ec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Payroll.vue?vue&type=template&id=df92a7ec& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Payroll.vue?vue&type=template&id=df92a7ec&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Payroll_vue_vue_type_template_id_df92a7ec___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Payroll_vue_vue_type_template_id_df92a7ec___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

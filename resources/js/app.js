@@ -23,6 +23,7 @@ const routes = [
     { path: '/emloyee', component: require('./components/Emloyee.vue').default },
     { path: '/admin', component: require('./components/Admin.vue').default },
     { path: '/profile', component: require('./components/Profile.vue').default },
+    { path: '/payroll', component: require('./components/Payroll.vue').default },
     { path: '*', component: require('./components/404Page.vue').default }
   ]
 

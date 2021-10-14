@@ -39,7 +39,6 @@ class AdminController extends Controller
      */
     public function store(CreateAdminRequest $request)
     {
-        $this->authorize('isAdmin');
         return User::create([
             'name' => $request['name'],
             'email' => $request['email'],
@@ -68,7 +67,6 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('isAdmin');
         $user = User::findOrFail($id);
         $this->validate($request,[
             'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,

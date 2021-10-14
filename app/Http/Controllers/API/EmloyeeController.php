@@ -42,7 +42,7 @@ class EmloyeeController extends Controller
         return Emloyee::create([
             'name' => $request['name'],
             'email' => $request['email'],
-            'qrcode'=>bcrypt($request->name.$request->email,$request),
+            'qrcode'=>bcrypt($request->name.$request->email),
             'salary' => $request['salary'],
             // 'password' => Hash::make($request['password']),
         ]);
