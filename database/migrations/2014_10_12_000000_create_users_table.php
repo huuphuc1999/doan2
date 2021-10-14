@@ -17,8 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->bigInteger('salary')->unsigned()->default(0);
-            $table->string('role')->default('emloyee');
+            $table->enum('role',['admin','manager','accountant '])->default('accountant');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

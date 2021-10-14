@@ -4,12 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Emloyee;
+use App\User;
+use App\Http\Requests\CreateAdminRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\CreateEmloyeeRequest;
-class EmloyeeController extends Controller
+class AdminController extends Controller
 {
-        /**
+            /**
      * Create a new controller instance.
      *
      * @return void
@@ -25,8 +26,8 @@ class EmloyeeController extends Controller
      */
     public function index()
     {
-        if (\Gate::allows('isAdmin') || \Gate::allows('isManager')) {
-            return Emloyee::latest()->paginate(5);
+        if (\Gate::allows('isAdmin')) {
+            return User::latest()->paginate(5);
         }
     }
 
@@ -36,15 +37,14 @@ class EmloyeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateEmloyeeRequest $request)
+    public function store(CreateAdminRequest $request)
     {
-        //
-        return Emloyee::create([
+        $this->authorize('isAdmin');
+        return User::create([
             'name' => $request['name'],
             'email' => $request['email'],
-            'qrcode'=>bcrypt($request->name.$request->email,$request),
-            'salary' => $request['salary'],
-            // 'password' => Hash::make($request['password']),
+            'role' => $request['role'],
+            'password' => Hash::make($request['password']),
         ]);
     }
 
@@ -68,35 +68,23 @@ class EmloyeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $emloyee = Emloyee::findOrFail($id);
+        $this->authorize('isAdmin');
+        $user = User::findOrFail($id);
         $this->validate($request,[
-            'email' => 'required|string|email|max:191|unique:Emloyees,email,'.$emloyee->id,
+            'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,
             'name' => 'required|string|max:191',
-            'salary' => 'required|numeric|min:1|max:100000000',
+            'password' => 'sometimes|string|min:6|max:191',
+            'role' => ['required', Rule::in(['admin', 'manager', 'accountant'])]
         ]);
-        $emloyee->update([
+        $user->update([
             'name' => $request['name'],
             'email' => $request['email'],
-            'qrcode'=>bcrypt($request->name.$request->email,$request),
-            'salary' => $request['salary'],
-            // 'password' => Hash::make($request['password']),
+            'role' => $request['role'],
+            'password' => Hash::make($request['password']),
         ]);
         return ['message' => 'Cập nhật thành công'];
     }
-    public function search(){
 
-        if ($search = \Request::get('q')) {
-            $emloyee = Emloyee::where(function($query) use ($search){
-                $query->where('name','LIKE',"%$search%")
-                        ->orWhere('email','LIKE',"%$search%");
-            })->paginate(20);
-        }else{
-            $emloyee = Emloyee::latest()->paginate(5);
-        }
-
-        return $emloyee;
-
-    }
     /**
      * Remove the specified resource from storage.
      *
@@ -106,8 +94,8 @@ class EmloyeeController extends Controller
     public function destroy($id)
     {
         $this->authorize('isAdmin');
-        $emloyee = Emloyee::findOrFail($id);
-        $emloyee->delete($id);
+        $user = User::findOrFail($id);
+        $user->delete($id);
         return ['message' => 'Xoá thành công'];
     }
 }

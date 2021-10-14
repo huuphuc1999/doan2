@@ -80,12 +80,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li> 
 
           @can('isAdmin')
-
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="fas fa-tools indigo"></i>
               <p>
-                Quản lý 
+                Quản lý Nhân viên
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -108,6 +107,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           @can('isAdmin')
           <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-tools indigo"></i>
+              <p>
+                Quản lý Admin
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <router-link to="admin" class="nav-link">
+                  <i class="fas fa-users nav-icon cyan"></i>
+                  <p>Phân quyền</p>
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Inactive Page</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          @endcan
+
+          @can('isAdmin')
+          <li class="nav-item">
             <router-link to="profile" class="nav-link">
               <i class="fas fa-user-cog blue green"></i>
               <p>
@@ -116,7 +141,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </router-link>
           </li> 
           @endcan
-
           <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"
               onclick="event.preventDefault();

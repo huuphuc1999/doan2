@@ -4,44 +4,33 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Danh sách nhân viên</h3>
+            <h3 class="card-title">Danh sách chức vụ</h3>
 
             <div class="card-tools">
               <button class="btn btn-primary" @click="resetModal">
                 Thêm mới <i class="fas fa-user-plus"></i>
               </button>
-              <button class="btn btn-success" @click="print">Print </button>
             </div>
           </div>
           <!-- /.card-header -->
-          <div  id="printMe" class="card-body table-responsive p-0">
-            <table  class="table table-hover text-nowrap">
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
               <thead>
                 <tr>
                   <th>#</th>
                   <th>Tên</th>
                   <th>Email</th>
-                  <th>QR CODE</th>
-                  <th>Mức lương</th>
+                  <th>Chức vụ</th>
                   <th>Ngày vào làm</th>
                   <th>Chỉnh sửa</th>
                 </tr>
               </thead>
-              <tbody >
-                <tr  v-for="(user, index) in users.data" :key="user.id">
+              <tbody>
+                <tr v-for="(user, index) in users.data" :key="user.id">
                   <td>{{ index + 1 }}</td>
                   <td>{{ user.name }}</td>
                   <td>{{ user.email }}</td>
-                   <td>
-                     <qr-code 
-                    style="padding: 10px"
-                    :text="user.qrcode"
-                    :size="size"
-                    error-level="L"
-                    ></qr-code>
-                     </td> 
-                 
-                  <td>{{ user.salary }} VNĐ</td>
+                  <td>{{ user.role | upText }}</td>
                   <td>{{ user.created_at | myDate }}</td>
                   <td>
                     <a href="#" @click="fillModal(user)">
@@ -52,7 +41,6 @@
                       <i class="fa fa-trash red"></i>
                     </a>
                   </td>
-               
                 </tr>
               </tbody>
             </table>
@@ -68,11 +56,11 @@
         <!-- /.card -->
       </div>
     </div>
-    <div v-if="!$acl.isAdminOrManager()">
+    <div v-if="!$acl.isAdmin()">
       <page-404></page-404>
     </div>
     <!-- Modal -->
-    <form @submit.prevent="modeOfEmloyeeFunc ? updateEmloyee() : addEmloyee()">
+    <form @submit.prevent="modeOfAdminFunc ? updateAdmin() : addAdmin()">
       <div
         class="modal fade"
         id="addNew"
@@ -86,17 +74,17 @@
             <div class="modal-header">
               <h5
                 class="modal-title"
-                v-show="modeOfEmloyeeFunc"
+                v-show="modeOfAdminFunc"
                 id="addNewLabel"
               >
-                Cập nhật nhân viên
+                Cập nhật người quản lý
               </h5>
               <h5
                 class="modal-title"
-                v-show="!modeOfEmloyeeFunc"
+                v-show="!modeOfAdminFunc"
                 id="addNewLabel"
               >
-                Thêm nhân viên mới
+                Thêm người quản lý mới
               </h5>
               <button
                 type="button"
@@ -138,18 +126,38 @@
                 />
               </div>
 
+
               <div class="form-group">
-                <input
-                  v-model="form.salary"
-                  type="number"
-                  name="salary"
-                  placeholder="Mức lương..."
+                
+                <select
+                :required="true"
+                  name="role"
+                  v-model="form.role"
+                  id="role"
                   class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('salary') }"
+                  :class="{ 'is-invalid': form.errors.has('role') }"
+                >
+                  <option v-for="user in users.data" :key="user.id" :value="user.role" >{{ user.role | upText }}</option>
+                </select>
+                <div
+                  v-if="form.errors.has('role')"
+                  v-html="form.errors.get('role')"
+                />
+              </div>
+
+              <div class="form-group">
+                <p v-if="modeOfAdminFunc">Mặc định bỏ trống là không đổi </p>
+                <input
+                  v-model="form.password"
+                  type="password"
+                  name="password"
+                  placeholder="Mật khẩu..."
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('password') }"
                 />
                 <div
-                  v-if="form.errors.has('salary')"
-                  v-html="form.errors.get('salary')"
+                  v-if="form.errors.has('password')"
+                  v-html="form.errors.get('password')"
                 />
               </div>
             </div>
@@ -158,14 +166,14 @@
                 Trở lại
               </button>
               <button
-                v-show="modeOfEmloyeeFunc"
+                v-show="modeOfAdminFunc"
                 type="submit"
                 class="btn btn-primary"
               >
                 Cập nhật
               </button>
               <button
-                v-show="!modeOfEmloyeeFunc"
+                v-show="!modeOfAdminFunc"
                 type="submit"
                 class="btn btn-primary"
               >
@@ -182,41 +190,32 @@
 <script>
 import Form from "vform";
 import Page404 from "./404Page";
-import VueQRCodeComponent from 'vue-qr-generator'
+
 export default {
   data() {
     return {
-      
-
-      size: 70,
-      modeOfEmloyeeFunc: false,
+      modeOfAdminFunc: false,
       users: {},
       form: new Form({
         id: "",
-        name: "", 
-        qrcode: "",
-        salary: "", 
+        name: "",
+        role: "accountant",
         email: "",
+        password: "",
       }),
-
     };
   },
   components: {
     Page404,
-    'qr-code':VueQRCodeComponent
   },
   methods: {
-    print () {
-      // Pass the element id here
-      this.$htmlToPaper('printMe');
-    },
     getEmloyee() {
       if (this.$acl.isAdminOrManager()) {
-        axios.get("api/user").then(({ data }) => (this.users = data));
+        axios.get("api/admin").then(({ data }) => (this.users = data));
       }
     },
-    addEmloyee() {
-      this.form.post("api/user").then(() => {
+    addAdmin() {
+      this.form.post("api/admin").then(() => {
         Fire.$emit("sendRequest");
         $("#addNew").modal("hide");
         Toast.fire({
@@ -237,7 +236,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.form
-            .delete("api/user/" + id)
+            .delete("api/admin/" + id)
             .then(() => {
               Fire.$emit("sendRequest");
               Swal.fire("Đã xoá!", "Nhân viên này đã bị xoá.", "success");
@@ -248,9 +247,9 @@ export default {
         }
       });
     },
-    updateEmloyee() {
+    updateAdmin() {
       this.form
-        .put("api/user/" + this.form.id)
+        .put("api/admin/" + this.form.id)
         .then(() => {
           // success
           $("#addNew").modal("hide");
@@ -264,20 +263,20 @@ export default {
         .catch(() => {});
     },
     resetModal() {
-      // this.modeOfEmloyeeFunc = !this.modeOfEmloyeeFunc;
-      this.modeOfEmloyeeFunc = false;
+      // this.modeOfAdminFunc = !this.modeOfAdminFunc;
+      this.modeOfAdminFunc = false;
 
       this.form.reset();
       $("#addNew").modal("show");
     },
     fillModal(user) {
-      this.modeOfEmloyeeFunc = true;
+      this.modeOfAdminFunc = true;
       this.form.reset();
       $("#addNew").modal("show");
       this.form.fill(user);
     },
     getResults(page = 1) {
-      axios.get("api/user?page=" + page).then((response) => {
+      axios.get("api/admin?page=" + page).then((response) => {
         this.users = response.data;
       });
     },
@@ -288,7 +287,6 @@ export default {
       axios.get('api/searchEmloyee?q=' + query)
       .then((data) => {
         this.users = data.data;
-        
       })
       .catch(() => {
 
@@ -301,8 +299,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-table td {
-  vertical-align: middle !important;
-}
-</style>

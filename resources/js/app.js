@@ -11,12 +11,17 @@ import moment from 'moment';
 import Vue from 'vue';
 import VueRouter from 'vue-router'
 import ACL from './ACL'
+//
+import VueHtmlToPaper from 'vue-html-to-paper';
+Vue.use(VueHtmlToPaper);
+//
 Vue.prototype.$acl = new ACL(window.user)
 Vue.use(VueRouter)
 
 const routes = [
     { path: '/home', component: require('./components/Home.vue').default },
     { path: '/emloyee', component: require('./components/Emloyee.vue').default },
+    { path: '/admin', component: require('./components/Admin.vue').default },
     { path: '/profile', component: require('./components/Profile.vue').default },
     { path: '*', component: require('./components/404Page.vue').default }
   ]

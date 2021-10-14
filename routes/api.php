@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::apiResources(['user' => 'API\EmloyeeController']);
+Route::apiResources(['admin' => 'API\AdminController']);
 Route::get('/searchEmloyee', 'API\EmloyeeController@search');
